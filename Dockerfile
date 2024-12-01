@@ -3,7 +3,7 @@
 FROM node:20-alpine
 
 # Set the working directory in the container
-WORKDIR /app
+WORKDIR /text_to_video
 
 # Copy package.json and package-lock.json first for efficient caching
 COPY package*.json ./
