@@ -1,78 +1,57 @@
-import React, { useState } from 'react';
-import { Video } from 'lucide-react';
-import { PromptInput } from './components/PromptInput';
-import { VideoPreview } from './components/VideoPreview';
-import { LoadingSpinner } from './components/LoadingSpinner';
-import { GenerateButton } from './components/GenerateButton';
-import { generateVideo } from './services/videoService';
+import React, { useState } from "react";
+import { Toaster, toast } from "sonner";
+import { Header } from "./components/Header";
+import { PromptForm } from "./components/PromptForm";
+import { VideoPlayer } from "./components/VideoPlayer";
 
 function App() {
-  const [prompt, setPrompt] = useState('');
+  const [prompt, setPrompt] = useState("");
+  const [isGenerating, setIsGenerating] = useState(false);
   const [videoUrl, setVideoUrl] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
-  const handleGenerate = async () => {
+  const handleGenerate = () => {
     if (!prompt.trim()) return;
 
-    setIsLoading(true);
-    setError(null);
+    setIsGenerating(true);
+    toast.loading("Generating your video...");
 
-    try {
-      const response = await generateVideo({ prompt });
-      if (response.status === 'success') {
-        setVideoUrl(response.videoUrl);
-      } else {
-        setError(response.message || 'Failed to generate video');
-      }
-    } catch (err) {
-      setError('An unexpected error occurred');
-    } finally {
-      setIsLoading(false);
-    }
+    // Simulate video generation
+    setTimeout(() => {
+      setVideoUrl(
+        "https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+      );
+      setIsGenerating(false);
+      toast.success("Video generated successfully!");
+    }, 2000);
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white">
-      <div className="container mx-auto px-4 py-8 max-w-4xl">
-        <div className="flex items-center gap-2 mb-8">
-          <Video className="w-8 h-8 text-blue-500" />
-          <h1 className="text-3xl font-bold">AI Video Generator</h1>
-        </div>
+    <div className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-900 to-black p-8">
+      <div className="max-w-2xl mx-auto space-y-8">
+        <Header />
 
-        <div className="space-y-6">
-          <div className="bg-gray-800 rounded-lg p-6">
-            <h2 className="text-xl font-semibold mb-4">Enter Your Prompt</h2>
-            <PromptInput
-              value={prompt}
-              onChange={setPrompt}
-              disabled={isLoading}
-            />
-            <div className="mt-4">
-              <GenerateButton
-                onClick={handleGenerate}
-                isGenerating={isLoading}
-                disabled={!prompt.trim()}
-              />
-            </div>
-          </div>
+        <div className="space-y-8">
+          <PromptForm
+            prompt={prompt}
+            onPromptChange={setPrompt}
+            onSubmit={handleGenerate}
+            isGenerating={isGenerating}
+          />
 
-          {error && (
-            <div className="bg-red-500/20 border border-red-500 rounded-lg p-4 text-red-200">
-              {error}
-            </div>
-          )}
-
-          {isLoading && <LoadingSpinner />}
-
-          {videoUrl && (
-            <div className="bg-gray-800 rounded-lg p-6">
-              <h2 className="text-xl font-semibold mb-4">Generated Video</h2>
-              <VideoPreview videoUrl={videoUrl} />
-            </div>
-          )}
+          {videoUrl && <VideoPlayer videoUrl={videoUrl} />}
         </div>
       </div>
+
+      <Toaster
+        position="top-center"
+        toastOptions={{
+          style: {
+            background: "#1f2937",
+            color: "#fff",
+            border: "1px solid #374151",
+          },
+        }}
+      />
     </div>
   );
 }
