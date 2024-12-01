@@ -3,6 +3,7 @@ import { Toaster, toast } from "sonner";
 import { Header } from "./components/Header";
 import { PromptForm } from "./components/PromptForm";
 import { VideoPlayer } from "./components/VideoPlayer";
+import { BackgroundEffects } from "./components/BackgroundEffects";
 
 function App() {
   const [prompt, setPrompt] = useState("");
@@ -26,8 +27,10 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-900 to-black p-8">
-      <div className="max-w-2xl mx-auto space-y-8">
+    <div className="relative min-h-screen overflow-hidden bg-gradient-to-b from-indigo-950 via-purple-900 to-rose-900">
+      <BackgroundEffects />
+
+      <div className="relative z-10 max-w-2xl mx-auto p-8 space-y-8">
         <Header />
 
         <div className="space-y-8">
@@ -46,9 +49,10 @@ function App() {
         position="top-center"
         toastOptions={{
           style: {
-            background: "#1f2937",
+            background: "rgba(17, 24, 39, 0.8)",
             color: "#fff",
-            border: "1px solid #374151",
+            border: "1px solid rgba(55, 65, 81, 0.5)",
+            backdropFilter: "blur(8px)",
           },
         }}
       />

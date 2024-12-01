@@ -34,9 +34,10 @@ export const PromptForm: React.FC<PromptFormProps> = ({
           value={prompt}
           onChange={(e) => onPromptChange(e.target.value)}
           placeholder="Describe your video idea in detail..."
-          className="w-full p-4 rounded-lg bg-gray-800/50 backdrop-blur-sm text-white border border-gray-700
-                     focus:ring-2 focus:ring-blue-500 focus:border-transparent
-                     placeholder:text-gray-400 min-h-[120px] resize-none"
+          className="w-full p-4 rounded-lg bg-gray-900/40 backdrop-blur-md text-white border border-gray-700/50
+                     focus:ring-2 focus:ring-purple-500 focus:border-transparent
+                     placeholder:text-gray-400 min-h-[120px] resize-none
+                     shadow-lg transition-all duration-200"
           disabled={isGenerating}
         />
         <div className="absolute bottom-2 right-2 text-xs text-gray-400">
@@ -47,7 +48,8 @@ export const PromptForm: React.FC<PromptFormProps> = ({
       <Button
         type="submit"
         disabled={!prompt.trim() || isGenerating}
-        className="w-full"
+        className="w-full bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600
+                  shadow-lg shadow-purple-500/20 transition-all duration-200"
         size="lg"
       >
         <Wand2 className="w-5 h-5 mr-2" />
