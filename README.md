@@ -47,4 +47,3 @@ You can now access the app at `http://localhost:3000`.
 ## TODO
 - Text to Video API
 - Rework Frontend
-```
