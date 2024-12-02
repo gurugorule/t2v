@@ -3,7 +3,7 @@ import { CONFIG } from '../config/constants';
 
 // Simulated video generation service
 export const generateVideo = async (
-  request: VideoGenerationRequest
+  _request: VideoGenerationRequest
 ): Promise<VideoGenerationResponse> => {
   // Simulate API call with configured timeout
   await new Promise((resolve) => setTimeout(resolve, CONFIG.VIDEO_GENERATION_TIMEOUT));
