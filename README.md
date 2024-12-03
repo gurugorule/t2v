@@ -34,6 +34,11 @@ After pulling the image, run the Docker container with the following command:
 
 ```bash
 docker run --name t2v -p 3000:3000 -d gurugorule/t2v:latest
+
+
+# To run Beta Version 
+docker run --name t2vbeta -p 3000:5173 -d gurugorule/t2v:beta
+
 ```
 
 - **`--name t2v`**: Specifies the container name.
