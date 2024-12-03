@@ -1,5 +1,10 @@
-import { useState } from 'react';
-import { Toaster, toast } from 'sonner';
+import { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { Toaster } from 'sonner';
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from './config/firebase';
+import { useAuthStore } from './store/authStore';
+import { LoginPage } from './pages/LoginPage';
 import { Header } from './components/Header';
 import { PromptForm } from './components/PromptForm';
 import { VideoPlayer } from './components/VideoPlayer';
@@ -9,6 +14,15 @@ function App() {
   const [prompt, setPrompt] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
   const [videoUrl, setVideoUrl] = useState<string | null>(null);
+  const { user, setUser } = useAuthStore();
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setUser(user);
+    });
+
+    return () => unsubscribe();
+  }, [setUser]);
 
   const handleGenerate = () => {
     if (!prompt.trim()) return;
@@ -16,7 +30,6 @@ function App() {
     setIsGenerating(true);
     toast.loading('Generating your video...');
 
-    // Simulate video generation
     setTimeout(() => {
       setVideoUrl('https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4');
       setIsGenerating(false);
@@ -24,7 +37,7 @@ function App() {
     }, 2000);
   };
 
-  return (
+  const MainContent = () => (
     <div className="relative min-h-screen overflow-hidden bg-gradient-to-b from-indigo-950 via-purple-900 to-rose-900">
       <BackgroundEffects />
       
@@ -42,6 +55,21 @@ function App() {
           {videoUrl && <VideoPlayer videoUrl={videoUrl} />}
         </div>
       </div>
+    </div>
+  );
+
+  return (
+    <Router>
+      <Routes>
+        <Route 
+          path="/login" 
+          element={user ? <Navigate to="/" /> : <LoginPage />} 
+        />
+        <Route 
+          path="/" 
+          element={user ? <MainContent /> : <Navigate to="/login" />} 
+        />
+      </Routes>
       
       <Toaster
         position="top-center"
@@ -54,7 +82,7 @@ function App() {
           },
         }}
       />
-    </div>
+    </Router>
   );
 }
 
