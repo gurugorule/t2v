@@ -3,7 +3,11 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { LoginForm } from './LoginForm';
 import { SignUpForm } from './SignUpForm';
 
-export const AuthTabs: React.FC = () => {
+interface AuthTabsProps {
+  onLoginSuccess: () => void;
+}
+
+export const AuthTabs: React.FC<AuthTabsProps> = ({ onLoginSuccess }) => {
   const [activeTab, setActiveTab] = useState<'login' | 'signup'>('login');
 
   return (
@@ -39,7 +43,11 @@ export const AuthTabs: React.FC = () => {
           exit={{ opacity: 0, x: -20 }}
           transition={{ duration: 0.2 }}
         >
-          {activeTab === 'login' ? <LoginForm /> : <SignUpForm />}
+          {activeTab === 'login' ? (
+            <LoginForm onLoginSuccess={onLoginSuccess} />
+          ) : (
+            <SignUpForm onLoginSuccess={onLoginSuccess} />
+          )}
         </motion.div>
       </AnimatePresence>
     </div>

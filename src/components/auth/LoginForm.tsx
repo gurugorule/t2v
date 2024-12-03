@@ -4,7 +4,11 @@ import { auth } from '../../config/firebase';
 import { toast } from 'sonner';
 import { Button } from '../ui/Button';
 
-export const LoginForm: React.FC = () => {
+interface LoginFormProps {
+  onLoginSuccess: () => void;
+}
+
+export const LoginForm: React.FC<LoginFormProps> = ({ onLoginSuccess }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -16,6 +20,7 @@ export const LoginForm: React.FC = () => {
     try {
       await signInWithEmailAndPassword(auth, email, password);
       toast.success('Successfully logged in!');
+      onLoginSuccess();
     } catch (error) {
       toast.error('Failed to login. Please check your credentials.');
     } finally {
@@ -28,6 +33,7 @@ export const LoginForm: React.FC = () => {
     try {
       await signInWithPopup(auth, provider);
       toast.success('Successfully logged in with Google!');
+      onLoginSuccess();
     } catch (error) {
       toast.error('Failed to login with Google.');
     }

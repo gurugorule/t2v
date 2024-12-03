@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Toaster, toast } from 'sonner';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from './config/firebase';
@@ -14,6 +14,7 @@ function App() {
   const [prompt, setPrompt] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
   const [videoUrl, setVideoUrl] = useState<string | null>(null);
+  const [showLogin, setShowLogin] = useState(false);
   const { user, setUser } = useAuthStore();
 
   useEffect(() => {
@@ -25,6 +26,11 @@ function App() {
   }, [setUser]);
 
   const handleGenerate = () => {
+    if (!user) {
+      setShowLogin(true);
+      return;
+    }
+
     if (!prompt.trim()) return;
     
     setIsGenerating(true);
@@ -37,39 +43,30 @@ function App() {
     }, 2000);
   };
 
-  const MainContent = () => (
-    <div className="relative min-h-screen overflow-hidden bg-gradient-to-b from-indigo-950 via-purple-900 to-rose-900">
-      <BackgroundEffects />
-      
-      <div className="relative z-10 max-w-2xl mx-auto p-8 space-y-8">
-        <Header />
-        
-        <div className="space-y-8">
-          <PromptForm
-            prompt={prompt}
-            onPromptChange={setPrompt}
-            onSubmit={handleGenerate}
-            isGenerating={isGenerating}
-          />
-
-          {videoUrl && <VideoPlayer videoUrl={videoUrl} />}
-        </div>
-      </div>
-    </div>
-  );
+  if (showLogin) {
+    return <LoginPage onLoginSuccess={() => setShowLogin(false)} />;
+  }
 
   return (
     <Router>
-      <Routes>
-        <Route 
-          path="/login" 
-          element={user ? <Navigate to="/" /> : <LoginPage />} 
-        />
-        <Route 
-          path="/" 
-          element={user ? <MainContent /> : <Navigate to="/login" />} 
-        />
-      </Routes>
+      <div className="relative min-h-screen overflow-hidden bg-gradient-to-b from-indigo-950 via-purple-900 to-rose-900">
+        <BackgroundEffects />
+        
+        <div className="relative z-10 max-w-2xl mx-auto p-8 space-y-8">
+          <Header />
+          
+          <div className="space-y-8">
+            <PromptForm
+              prompt={prompt}
+              onPromptChange={setPrompt}
+              onSubmit={handleGenerate}
+              isGenerating={isGenerating}
+            />
+
+            {videoUrl && <VideoPlayer videoUrl={videoUrl} />}
+          </div>
+        </div>
+      </div>
       
       <Toaster
         position="top-center"

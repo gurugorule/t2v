@@ -4,7 +4,11 @@ import { auth } from '../../config/firebase';
 import { toast } from 'sonner';
 import { Button } from '../ui/Button';
 
-export const SignUpForm: React.FC = () => {
+interface SignUpFormProps {
+  onLoginSuccess: () => void;
+}
+
+export const SignUpForm: React.FC<SignUpFormProps> = ({ onLoginSuccess }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -23,6 +27,7 @@ export const SignUpForm: React.FC = () => {
     try {
       await createUserWithEmailAndPassword(auth, email, password);
       toast.success('Account created successfully!');
+      onLoginSuccess();
     } catch (error: any) {
       toast.error(error.message || 'Failed to create account');
     } finally {

@@ -37,7 +37,7 @@ docker run --name t2v -p 3000:3000 -d gurugorule/t2v:latest
 
 
 # To run Beta Version 
-docker run --name t2vbeta -p 3000:5173 -d gurugorule/t2v:beta
+docker run --name t2vbeta -p 3000:3000 -d gurugorule/t2v:beta
 
 ```
 
@@ -53,3 +53,5 @@ You can now access the app at `http://localhost:3000`.
 - Text to Video API
 - Rework Frontend
 - Add Firebase config in src/config/firebase.ts
+- google Login service 
+- database to store user credentials
