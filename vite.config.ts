@@ -1,13 +1,17 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import { CONFIG } from './src/config/constants';
 
 export default defineConfig({
   plugins: [react()],
   server: {
-    port: CONFIG.PORT,
+    port: 3000,
     host: true,
     strictPort: true,
   },
-  envDir: '.',
+  preview: {
+    port: 3000
+  },
+  optimizeDeps: {
+    include: ['firebase/app', 'firebase/auth']
+  }
 });
