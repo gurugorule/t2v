@@ -1,0 +1,21 @@
+Merge pull request #2 from gurugorule/Docker-image
+
+docker image success
+
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+#
+# Author:    GuruGorule <113411312+gurugorule@users.noreply.github.com>
+# Date:      Mon Dec 2 11:23:28 2024 +0530
+#
+# On branch main
+# Your branch is up to date with 'origin/main'.
+#
+# Changes to be committed:
+#	modified:   Dockerfile
+#	modified:   README.md
+#	modified:   package-lock.json
+#	modified:   src/App.tsx
+#	modified:   src/services/videoService.ts
+#	modified:   tsconfig.json
+#
