@@ -1,3 +1,4 @@
+![Project Logo](src/assets/UI_v1.0.0.png)
 # AI Video Generator
 
 A modern web application that leverages artificial intelligence to generate videos from text descriptions. Built with React, TypeScript, and Firebase, featuring a sleek UI with Tailwind CSS and Framer Motion animations.
