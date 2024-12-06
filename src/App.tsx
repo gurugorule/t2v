@@ -1,72 +1,44 @@
-import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { Toaster, toast } from 'sonner';
-import { onAuthStateChanged } from 'firebase/auth';
-import { auth } from './config/firebase';
-import { useAuthStore } from './store/authStore';
+import { Toaster } from 'sonner';
+import { useAuth } from './hooks/useAuth';
+import { MainLayout } from './components/layout/MainLayout';
+import { LandingPage } from './pages/LandingPage';
+import { ChatPage } from './pages/ChatPage';
+import { VideoPage } from './pages/VideoPage';
+import { ImagePage } from './pages/ImagePage';
+import { SettingsPage } from './pages/SettingsPage';
 import { LoginPage } from './pages/LoginPage';
-import { Header } from './components/Header';
-import { PromptForm } from './components/PromptForm';
-import { VideoPlayer } from './components/VideoPlayer';
-import { BackgroundEffects } from './components/BackgroundEffects';
 
 function App() {
-  const [prompt, setPrompt] = useState('');
-  const [isGenerating, setIsGenerating] = useState(false);
-  const [videoUrl, setVideoUrl] = useState<string | null>(null);
-  const [showLogin, setShowLogin] = useState(false);
-  const { user, setUser } = useAuthStore();
+  const { isLoading } = useAuth();
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setUser(user);
-    });
-
-    return () => unsubscribe();
-  }, [setUser]);
-
-  const handleGenerate = () => {
-    if (!user) {
-      setShowLogin(true);
-      return;
-    }
-
-    if (!prompt.trim()) return;
-    
-    setIsGenerating(true);
-    toast.loading('Generating your video...');
-
-    setTimeout(() => {
-      setVideoUrl('https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4');
-      setIsGenerating(false);
-      toast.success('Video generated successfully!');
-    }, 2000);
-  };
-
-  if (showLogin) {
-    return <LoginPage onLoginSuccess={() => setShowLogin(false)} />;
+  if (isLoading) {
+    return (
+      <div className="h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" />
+      </div>
+    );
   }
 
   return (
     <Router>
-      <div className="relative min-h-screen overflow-hidden bg-gradient-to-b from-indigo-950 via-purple-900 to-rose-900">
-        <BackgroundEffects />
-        
-        <div className="relative z-10 max-w-2xl mx-auto p-8 space-y-8">
-          <Header />
-          
-          <div className="space-y-8">
-            <PromptForm
-              prompt={prompt}
-              onPromptChange={setPrompt}
-              onSubmit={handleGenerate}
-              isGenerating={isGenerating}
-            />
-
-            {videoUrl && <VideoPlayer videoUrl={videoUrl} />}
-          </div>
-        </div>
-      </div>
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route
+          path="/*"
+          element={
+            <MainLayout>
+              <Routes>
+                <Route path="/chat" element={<ChatPage />} />
+                <Route path="/video" element={<VideoPage />} />
+                <Route path="/image" element={<ImagePage />} />
+                <Route path="/settings" element={<SettingsPage />} />
+              </Routes>
+            </MainLayout>
+          }
+        />
+      </Routes>
       
       <Toaster
         position="top-center"
